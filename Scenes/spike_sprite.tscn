@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://hu4tnoweex4k"]
+
+[ext_resource type="Texture2D" uid="uid://b4ft7e51fkmr5" path="res://Assets/Visual/spike.png" id="1_oude2"]
+[ext_resource type="Script" path="res://Scripts/KillBlock.cs" id="2_cfyq1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_up8i0"]
+size = Vector2(16, 12)
+
+[node name="SpikeSprite" type="Sprite2D"]
+texture = ExtResource("1_oude2")
+script = ExtResource("2_cfyq1")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_up8i0")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="OnPlayerEntered"]

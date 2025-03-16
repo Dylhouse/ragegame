@@ -1,0 +1,442 @@
+[gd_scene load_steps=35 format=4 uid="uid://bo5hecgema0h3"]
+
+[ext_resource type="TileSet" uid="uid://x7v7vlbayiwp" path="res://Assets/GrassBrickTileset.tres" id="1_vf5d5"]
+[ext_resource type="PackedScene" uid="uid://cj4md5ymwmpf6" path="res://Scenes/Player.tscn" id="2_dn4vq"]
+[ext_resource type="PackedScene" uid="uid://0a8ffkttr3k8" path="res://Scenes/kill_block.tscn" id="3_a4cd5"]
+[ext_resource type="Texture2D" uid="uid://cepfusa1amjmn" path="res://Assets/Visual/grass_block.png" id="4_5a87y"]
+[ext_resource type="Script" path="res://Scripts/BlockFall.cs" id="4_5g6m7"]
+[ext_resource type="Script" path="res://Scenes/MovingPlatformAnimPlayer.cs" id="5_gkm3q"]
+[ext_resource type="PackedScene" uid="uid://dgsv1smrbdum2" path="res://player_detection_area.tscn" id="6_58iwo"]
+[ext_resource type="Script" path="res://MysteriousOrb1.cs" id="7_0cb7r"]
+[ext_resource type="Texture2D" uid="uid://dyqbsnmgvf8ie" path="res://Assets/Visual/mystery-orb.png" id="7_uhi1h"]
+[ext_resource type="Script" path="res://Scenes/MegaBlockFallPlayer.cs" id="9_8elv5"]
+[ext_resource type="PackedScene" uid="uid://ch5xeirulfcai" path="res://Scenes/next_level_area.tscn" id="10_66ojv"]
+[ext_resource type="PackedScene" uid="uid://bbuf2bmpak3fn" path="res://Scenes/level_three.tscn" id="11_wbox2"]
+
+[sub_resource type="Gradient" id="Gradient_fmys8"]
+offsets = PackedFloat32Array(0, 0.506579)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0.566667, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lboj4"]
+gradient = SubResource("Gradient_fmys8")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="Animation" id="Animation_nedwf"]
+resource_name = "move_left"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-32, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_x1s23"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_g7bsn"]
+resource_name = "move_right"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-32, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n5fsv"]
+_data = {
+"RESET": SubResource("Animation_x1s23"),
+"move_left": SubResource("Animation_nedwf"),
+"move_right": SubResource("Animation_g7bsn")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_asmfn"]
+size = Vector2(14, 180)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ml0b"]
+size = Vector2(15.75, 16.5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_keod0"]
+atlas = ExtResource("7_uhi1h")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2l76p"]
+atlas = ExtResource("7_uhi1h")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3ubn6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_keod0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2l76p")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.5
+}]
+
+[sub_resource type="Animation" id="Animation_w1jgs"]
+resource_name = "fall"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-165, -181), Vector2(-164, -43)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 11.8333]
+}
+
+[sub_resource type="Animation" id="Animation_8tddr"]
+length = 1.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.16667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-168, -164), Vector2(-169, -43), Vector2(-338, -76)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [12.5664, 4.29875, 8.72665]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../AnimatableBody2D/Sprite2D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.6, 1.33333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-11, 170)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../AnimatableBody2D/Sprite2D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.6, 1.33333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.98132]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../AnimatableBody2D/CollisionShape2D:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../BlockFallDetectionArea:monitoring")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_1v150"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("../AnimatableBody2D/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../BlockFallDetectionArea:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-318, -125)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2ftbw"]
+_data = {
+"RESET": SubResource("Animation_1v150"),
+"block_fall": SubResource("Animation_8tddr"),
+"fall": SubResource("Animation_w1jgs")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d1xns"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0snkl"]
+size = Vector2(17, 25.5)
+
+[sub_resource type="Animation" id="Animation_22wj2"]
+resource_name = "MegaBlockFall"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.433333, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(130, -306), Vector2(130, 300)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.433333, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 12.5664]
+}
+
+[sub_resource type="Animation" id="Animation_b1t0p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(130, -306)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [12.5664]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sa5qx"]
+_data = {
+"MegaBlockFall": SubResource("Animation_22wj2"),
+"RESET": SubResource("Animation_b1t0p")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aqnqw"]
+size = Vector2(26, 168)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v7x2q"]
+size = Vector2(20, 149)
+
+[node name="LevelTwo" type="Node2D"]
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="BackgroundSprite" type="Sprite2D" parent="Background"]
+position = Vector2(-5.60519e-45, -1)
+scale = Vector2(9.45313, 5.23438)
+texture = SubResource("GradientTexture2D_lboj4")
+
+[node name="Foreground" type="Node2D" parent="."]
+
+[node name="SolidTileMapLayer" type="TileMapLayer" parent="Foreground"]
+tile_map_data = PackedByteArray("AAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAJAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAFAAQAAAABAAAAAAAGAAQAAAABAAAAAAAHAAQAAAABAAAAAAAIAAQAAAABAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAMAAAABAAAAAAAKAAMAAAABAAAAAAAJAAMAAAABAAAAAADz/wUAAAAAAAAAAADy/wUAAAAAAAAAAADx/wUAAAAAAAAAAADx/wYAAAAAAAAAAADx/wcAAAAAAAAAAADy/wcAAAAAAAAAAADz/wcAAAAAAAAAAADz/wYAAAAAAAAAAADy/wYAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAALAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAAMAAcAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAUAAAAAAAAAAAAMAAQAAAAAAAAAAAAMAAMAAAABAAAAAAANAAMAAAABAAAAAAAOAAMAAAABAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAgAAAAAAAAAAAAOAAkAAAAAAAAAAAANAAkAAAAAAAAAAAANAAgAAAAAAAAAAAANAAcAAAAAAAAAAAANAAYAAAAAAAAAAAANAAUAAAAAAAAAAAANAAQAAAAAAAAAAADx//b/AAAAAAAAAADx//X/AAAAAAAAAADx/wgAAAAAAAAAAADy/wgAAAAAAAAAAADz/wgAAAAAAAAAAADz/wQAAAAAAAAAAADy/wQAAAAAAAAAAADx/wQAAAAAAAAAAADx/wMAAAABAAAAAADy/wMAAAABAAAAAADz/wMAAAABAAAAAADw/wIAAAAAAAAAAADw/wEAAAAAAAAAAADw/wAAAAAAAAAAAADw////AAAAAAAAAADw//7/AAAAAAAAAADw//3/AAAAAAAAAADw//z/AAAAAAAAAADw//v/AAAAAAAAAAD3/wEAAAABAAAAAAD4/wEAAAABAAAAAAD5/wEAAAABAAAAAAD1//3/AAABAAAAAAD0//3/AAABAAAAAADz//3/AAABAAAAAAADAAYAAAAAAAAAAADy//3/AAABAAAAAAD7/wYAAAAAAAAAAAD8/wYAAAAAAAAAAAD9/wYAAAAAAAAAAAD9/wcAAAAAAAAAAAD9/wgAAAAAAAAAAAD8/wgAAAAAAAAAAAD7/wgAAAAAAAAAAAD7/wcAAAAAAAAAAAD8/wcAAAAAAAAAAAD7/wkAAAAAAAAAAAD8/wkAAAAAAAAAAAD9/wkAAAAAAAAAAAD7/wUAAQAAAAAAAgD8/wUAAQAAAAAAAgD9/wUAAQAAAAAAAgA=")
+tile_set = ExtResource("1_vf5d5")
+
+[node name="MovingPlatform" type="Node2D" parent="Foreground"]
+
+[node name="MovingPlatformLayer" type="TileMapLayer" parent="Foreground/MovingPlatform"]
+tile_map_data = PackedByteArray("AAD9/wAAAAABAAAAAAA=")
+tile_set = ExtResource("1_vf5d5")
+
+[node name="MovingPlatformAnimPlayer" type="AnimationPlayer" parent="Foreground/MovingPlatform/MovingPlatformLayer"]
+libraries = {
+"": SubResource("AnimationLibrary_n5fsv")
+}
+script = ExtResource("5_gkm3q")
+
+[node name="PlayerDetectionArea" parent="Foreground/MovingPlatform" instance=ExtResource("6_58iwo")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/MovingPlatform/PlayerDetectionArea"]
+position = Vector2(-74, -12)
+shape = SubResource("RectangleShape2D_asmfn")
+
+[node name="MysteriousOrbArea" parent="Foreground" instance=ExtResource("6_58iwo")]
+position = Vector2(-200, -56)
+script = ExtResource("7_0cb7r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/MysteriousOrbArea"]
+shape = SubResource("RectangleShape2D_8ml0b")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Foreground/MysteriousOrbArea"]
+sprite_frames = SubResource("SpriteFrames_3ubn6")
+autoplay = "default"
+frame = 1
+frame_progress = 0.966754
+
+[node name="BlockFall" type="Node2D" parent="Foreground"]
+position = Vector2(64, 0)
+
+[node name="KillBlockSprite" parent="Foreground/BlockFall" instance=ExtResource("3_a4cd5")]
+position = Vector2(-318, -125)
+rotation = 12.5664
+
+[node name="BlockFallAnimationPlayer" type="AnimationPlayer" parent="Foreground/BlockFall/KillBlockSprite"]
+libraries = {
+"": SubResource("AnimationLibrary_2ftbw")
+}
+script = ExtResource("4_5g6m7")
+
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="Foreground/BlockFall"]
+position = Vector2(-168, -24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/BlockFall/AnimatableBody2D"]
+position = Vector2(0, -1.52588e-05)
+shape = SubResource("RectangleShape2D_d1xns")
+
+[node name="Sprite2D" type="Sprite2D" parent="Foreground/BlockFall/AnimatableBody2D"]
+texture = ExtResource("4_5a87y")
+
+[node name="BlockFallDetectionArea" type="Area2D" parent="Foreground/BlockFall"]
+position = Vector2(-178, -164)
+rotation = 2.89599e-05
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/BlockFall/BlockFallDetectionArea"]
+position = Vector2(10.0034, 113.25)
+shape = SubResource("RectangleShape2D_0snkl")
+
+[node name="MegaBlockFall" type="Node2D" parent="Foreground"]
+
+[node name="KillBlockSprite" parent="Foreground/MegaBlockFall" instance=ExtResource("3_a4cd5")]
+position = Vector2(130, -306)
+rotation = 12.5664
+scale = Vector2(14.3438, 14.3438)
+
+[node name="MegaBlockFallPlayer" type="AnimationPlayer" parent="Foreground/MegaBlockFall/KillBlockSprite"]
+libraries = {
+"": SubResource("AnimationLibrary_sa5qx")
+}
+script = ExtResource("9_8elv5")
+
+[node name="OneShotPlayerDetectionArea" parent="Foreground/MegaBlockFall" instance=ExtResource("6_58iwo")]
+position = Vector2(103, 55)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/MegaBlockFall/OneShotPlayerDetectionArea"]
+position = Vector2(-38, -59)
+shape = SubResource("RectangleShape2D_aqnqw")
+
+[node name="NextLevelArea" parent="Foreground" instance=ExtResource("10_66ojv")]
+Level = ExtResource("11_wbox2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Foreground/NextLevelArea"]
+position = Vector2(252, -11.5)
+shape = SubResource("RectangleShape2D_v7x2q")
+
+[node name="Player" parent="." instance=ExtResource("2_dn4vq")]
+position = Vector2(-221, 44)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[connection signal="body_entered" from="Foreground/MovingPlatform/PlayerDetectionArea" to="Foreground/MovingPlatform/MovingPlatformLayer/MovingPlatformAnimPlayer" method="OnPlayerEntered"]
+[connection signal="body_entered" from="Foreground/MysteriousOrbArea" to="Foreground/MovingPlatform/MovingPlatformLayer/MovingPlatformAnimPlayer" method="OnOrbGet"]
+[connection signal="body_entered" from="Foreground/BlockFall/BlockFallDetectionArea" to="Foreground/BlockFall/KillBlockSprite/BlockFallAnimationPlayer" method="OnPlayerEntered"]
+[connection signal="body_entered" from="Foreground/MegaBlockFall/OneShotPlayerDetectionArea" to="Foreground/MegaBlockFall/KillBlockSprite/MegaBlockFallPlayer" method="OnPlayerEntered"]

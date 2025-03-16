@@ -1,23 +1,157 @@
-[gd_scene load_steps=5 format=4 uid="uid://l5axyaphkp72"]
+[gd_scene load_steps=22 format=4 uid="uid://l5axyaphkp72"]
 
 [ext_resource type="PackedScene" uid="uid://cj4md5ymwmpf6" path="res://Scenes/Player.tscn" id="1_w7gyd"]
-[ext_resource type="Texture2D" uid="uid://d22a1kcmmvgc6" path="res://Assets/brick.png" id="2_7ewkb"]
+[ext_resource type="TileSet" uid="uid://x7v7vlbayiwp" path="res://Assets/GrassBrickTileset.tres" id="2_kak6d"]
+[ext_resource type="Script" path="res://Scripts/MovingKillerCloud.cs" id="2_l5mih"]
+[ext_resource type="Script" path="res://Scripts/FallingFloor.cs" id="3_n4y36"]
+[ext_resource type="AudioStream" uid="uid://c6np4ixrt53bw" path="res://Assets/Audio/Pit_Fall.wav" id="3_v8cy3"]
+[ext_resource type="PackedScene" uid="uid://beogk4qbxevtj" path="res://Scenes/KillerCloud.tscn" id="4_iafre"]
+[ext_resource type="Script" path="res://Scripts/WallMove1.cs" id="6_1jv67"]
+[ext_resource type="Script" path="res://Scripts/DownCrusher.cs" id="8_1xdsg"]
+[ext_resource type="AudioStream" uid="uid://d1uw7o7tg8xkd" path="res://Assets/Audio/Crush.wav" id="8_6r357"]
+[ext_resource type="Script" path="res://Scripts/UpCrusher.cs" id="8_wesrh"]
+[ext_resource type="PackedScene" uid="uid://dgsv1smrbdum2" path="res://player_detection_area.tscn" id="11_d432t"]
+[ext_resource type="Script" path="res://Scripts/NextLevelArea.cs" id="12_jr3hu"]
+[ext_resource type="PackedScene" uid="uid://bo5hecgema0h3" path="res://Scenes/level_two.tscn" id="13_cvyi2"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1xk1e"]
-texture = ExtResource("2_7ewkb")
-0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+[sub_resource type="Gradient" id="Gradient_3mlal"]
+offsets = PackedFloat32Array(0, 0.506579)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0.566667, 1, 1)
 
-[sub_resource type="TileSet" id="TileSet_foar8"]
-physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_1xk1e")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_77bm1"]
+gradient = SubResource("Gradient_3mlal")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x4va8"]
+size = Vector2(17, 98)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_olmx7"]
+size = Vector2(45.5, 61)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y60xx"]
+size = Vector2(37, 61)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xbg36"]
+size = Vector2(37, 26.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v7fox"]
+size = Vector2(45.5, 107.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_48irw"]
+size = Vector2(20, 113)
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("1_w7gyd")]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-5.60519e-45, -1)
+scale = Vector2(9.45313, 5.23438)
+texture = SubResource("GradientTexture2D_77bm1")
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD9/wEAAAAAAAAAAAD+/wEAAAAAAAAAAAD//wEAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAP//AAAAAAAAAAAHAP//AAAAAAAAAAAHAP7/AAAAAAAAAAAGAP7/AAAAAAAAAAAGAP//AAAAAAAAAAAGAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAP//AAAAAAAAAAAIAP7/AAAAAAAAAAAJAP7/AAAAAAAAAAAJAP//AAAAAAAAAAAKAAAAAAAAAAAAAAAKAAEAAAAAAAAAAAALAAEAAAAAAAAAAAALAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAAKAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAADAAQAAAAAAAAAAAACAAUAAAAAAAAAAAABAAUAAAAAAAAAAAAAAAUAAAAAAAAAAAD//wUAAAAAAAAAAAD+/wUAAAAAAAAAAAD+/wYAAAAAAAAAAAD9/wYAAAAAAAAAAAD8/wUAAAAAAAAAAAD7/wUAAAAAAAAAAAD7/wQAAAAAAAAAAAD6/wQAAAAAAAAAAAD7/wMAAAAAAAAAAAD8/wMAAAAAAAAAAAD9/wIAAAAAAAAAAAD+/wIAAAAAAAAAAAD//wIAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAJAAEAAAAAAAAAAAAHAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAIAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAADAAMAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAABAAMAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAD//wQAAAAAAAAAAAD+/wQAAAAAAAAAAAD9/wQAAAAAAAAAAAD8/wQAAAAAAAAAAAD9/wMAAAAAAAAAAAD+/wMAAAAAAAAAAAD//wMAAAAAAAAAAAABAAQAAAAAAAAAAAD9/wUAAAAAAAAAAAAGAAMAAAAAAAAAAAAJAAIAAAAAAAAAAAA=")
-tile_set = SubResource("TileSet_foar8")
+[node name="MovingKillerCloud" parent="." instance=ExtResource("4_iafre")]
+position = Vector2(64, 126)
+script = ExtResource("2_l5mih")
+
+[node name="Area2D" type="Area2D" parent="MovingKillerCloud"]
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingKillerCloud/Area2D"]
+position = Vector2(130.5, -125)
+shape = SubResource("RectangleShape2D_x4va8")
+
+[node name="SolidTileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD0/wUAAAAAAAAAAAD0/wYAAAAAAAAAAAD1/wYAAAAAAAAAAAD1/wUAAAAAAAAAAAD2/wUAAAABAAAAAAD2/wYAAAAAAAAAAAD+/wUAAAABAAAAAAD//wUAAAABAAAAAAAAAAUAAAABAAAAAAABAAUAAAABAAAAAAACAAUAAAABAAAAAAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAD+/wYAAAAAAAAAAAD//wYAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAYAAAAAAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAJAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAFAAQAAAABAAAAAAAGAAQAAAABAAAAAAAHAAQAAAABAAAAAAAIAAQAAAABAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAMAAAABAAAAAAAKAAMAAAABAAAAAAAJAAMAAAABAAAAAAD6/wUAAAABAAAAAAD6/wYAAAAAAAAAAADz/wUAAAAAAAAAAADy/wUAAAAAAAAAAADx/wUAAAAAAAAAAADx/wYAAAAAAAAAAADx/wcAAAAAAAAAAADy/wcAAAAAAAAAAADz/wcAAAAAAAAAAADz/wYAAAAAAAAAAADy/wYAAAAAAAAAAADx/wgAAAAAAAAAAADy/wgAAAAAAAAAAADz/wgAAAAAAAAAAAD0/wcAAAAAAAAAAAD1/wcAAAAAAAAAAAD2/wcAAAAAAAAAAAD6/wcAAAAAAAAAAAD0/wgAAAAAAAAAAAD1/wgAAAAAAAAAAAD2/wgAAAAAAAAAAAD6/wgAAAAAAAAAAAD+/wgAAAAAAAAAAAD+/wcAAAAAAAAAAAD//wcAAAAAAAAAAAD//wgAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAALAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAAMAAcAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAUAAAAAAAAAAAAMAAQAAAAAAAAAAAAMAAMAAAABAAAAAAANAAMAAAABAAAAAAAOAAMAAAABAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAgAAAAAAAAAAAAOAAkAAAAAAAAAAAANAAkAAAAAAAAAAAANAAgAAAAAAAAAAAANAAcAAAAAAAAAAAANAAYAAAAAAAAAAAANAAUAAAAAAAAAAAANAAQAAAAAAAAAAADx//7/AAAAAAAAAADx//3/AAAAAAAAAADx//z/AAAAAAAAAADx//v/AAAAAAAAAADx//r/AAAAAAAAAADx//n/AAAAAAAAAADx//j/AAAAAAAAAADx//f/AAAAAAAAAADx//b/AAAAAAAAAADx//X/AAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="FallingFloor1" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD4/wUAAAABAAAAAAD5/wUAAAABAAAAAAD4/wYAAAAAAAAAAAD5/wYAAAAAAAAAAAD3/wUAAAABAAAAAAD3/wYAAAAAAAAAAAD3/wcAAAAAAAAAAAD4/wcAAAAAAAAAAAD5/wcAAAAAAAAAAAD5/wgAAAAAAAAAAAD4/wgAAAAAAAAAAAD3/wgAAAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
+script = ExtResource("3_n4y36")
+
+[node name="DetectionArea" type="Area2D" parent="FallingFloor1"]
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FallingFloor1/DetectionArea"]
+position = Vector2(-119.5, 64.5)
+shape = SubResource("RectangleShape2D_olmx7")
+
+[node name="PitFallNoisePlayer" type="AudioStreamPlayer" parent="FallingFloor1"]
+stream = ExtResource("3_v8cy3")
+volume_db = -15.0
+
+[node name="KillerCloudArea" parent="." instance=ExtResource("4_iafre")]
+
+[node name="Player" parent="." instance=ExtResource("1_w7gyd")]
+position = Vector2(-203, -20)
+
+[node name="MovingWall" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD1/wQAAAAAAAAAAAD1/wMAAAAAAAAAAAD1/wIAAAAAAAAAAAD1/wEAAAAAAAAAAAD1/wAAAAAAAAAAAAD1////AAABAAAAAAD0////AAABAAAAAAD0/wAAAAAAAAAAAAD0/wEAAAAAAAAAAAD0/wIAAAAAAAAAAAD0/wMAAAAAAAAAAAD0/wQAAAAAAAAAAADz/wQAAAAAAAAAAADy/wQAAAAAAAAAAADx/wQAAAAAAAAAAADw/wQAAAAAAAAAAADv/wQAAAAAAAAAAADz/wMAAAAAAAAAAADy/wMAAAAAAAAAAADx/wMAAAAAAAAAAADw/wMAAAAAAAAAAADv/wMAAAAAAAAAAADu/wMAAAAAAAAAAADt/wMAAAAAAAAAAADs/wMAAAAAAAAAAADu/wQAAAAAAAAAAADt/wQAAAAAAAAAAADs/wQAAAAAAAAAAADr/wQAAAAAAAAAAADs/wIAAAAAAAAAAADt/wIAAAAAAAAAAADu/wIAAAAAAAAAAADv/wIAAAAAAAAAAADw/wIAAAAAAAAAAADx/wIAAAAAAAAAAADy/wIAAAAAAAAAAADz/wIAAAAAAAAAAADz/wEAAAAAAAAAAADy/wEAAAAAAAAAAADx/wEAAAAAAAAAAADw/wEAAAAAAAAAAADv/wEAAAAAAAAAAADu/wEAAAAAAAAAAADt/wEAAAAAAAAAAADs/wEAAAAAAAAAAADt/wAAAAAAAAAAAADu/wAAAAAAAAAAAADv/wAAAAAAAAAAAADw/wAAAAAAAAAAAADx/wAAAAAAAAAAAADy/wAAAAAAAAAAAADz/wAAAAAAAAAAAADs/wAAAAAAAAAAAADr/wEAAAAAAAAAAADr/wIAAAAAAAAAAADr/wMAAAAAAAAAAADr/wAAAAAAAAAAAADz////AAABAAAAAADy////AAABAAAAAADx////AAAAAAAAAADw////AAAAAAAAAADv////AAAAAAAAAADu////AAAAAAAAAADt////AAAAAAAAAADs////AAAAAAAAAADr////AAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
+script = ExtResource("6_1jv67")
+
+[node name="FallingFloor2" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD7/wUAAAABAAAAAAD8/wUAAAABAAAAAAD9/wUAAAABAAAAAAD7/wYAAAAAAAAAAAD8/wYAAAAAAAAAAAD9/wYAAAAAAAAAAAD7/wcAAAAAAAAAAAD8/wcAAAAAAAAAAAD9/wcAAAAAAAAAAAD9/wgAAAAAAAAAAAD8/wgAAAAAAAAAAAD7/wgAAAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
+script = ExtResource("3_n4y36")
+
+[node name="DetectionArea" type="Area2D" parent="FallingFloor2"]
+position = Vector2(64, 0)
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FallingFloor2/DetectionArea"]
+position = Vector2(-119.5, 64.5)
+shape = SubResource("RectangleShape2D_y60xx")
+
+[node name="PitFallNoisePlayer" type="AudioStreamPlayer" parent="FallingFloor2"]
+stream = ExtResource("3_v8cy3")
+volume_db = -15.0
+
+[node name="WallDetectionArea" type="Area2D" parent="."]
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallDetectionArea"]
+position = Vector2(-55, 34.25)
+shape = SubResource("RectangleShape2D_xbg36")
+
+[node name="UpCrusher" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAUAAAABAAAAAAABAAUAAAABAAAAAAACAAUAAAABAAAAAAADAAUAAAABAAAAAAAAAAYAAAAAAAAAAAABAAYAAAAAAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAADAAsAAAAAAAAAAAACAAsAAAAAAAAAAAABAAsAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAAoAAAAAAAAAAAABAAoAAAAAAAAAAAADAAkAAAAAAAAAAAADAAwAAAAAAAAAAAACAAwAAAAAAAAAAAABAAwAAAAAAAAAAAAAAAwAAAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
+script = ExtResource("8_wesrh")
+
+[node name="DetectionArea" type="Area2D" parent="UpCrusher"]
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UpCrusher/DetectionArea"]
+position = Vector2(23, 45.75)
+shape = SubResource("RectangleShape2D_v7fox")
+
+[node name="CrashSound" type="AudioStreamPlayer" parent="UpCrusher"]
+stream = ExtResource("8_6r357")
+volume_db = -20.0
+
+[node name="DownCrusher" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAPb/AQAAAAAAAQABAPb/AQAAAAAAAQACAPb/AQAAAAAAAQADAPb/AQAAAAAAAQADAPX/AAAAAAAAAAACAPX/AAAAAAAAAAABAPX/AAAAAAAAAAAAAPX/AAAAAAAAAAAAAPT/AAAAAAAAAAABAPT/AAAAAAAAAAACAPT/AAAAAAAAAAADAPT/AAAAAAAAAAAAAPP/AAAAAAAAAAABAPP/AAAAAAAAAAACAPP/AAAAAAAAAAADAPP/AAAAAAAAAAAAAPL/AAAAAAAAAAABAPL/AAAAAAAAAAACAPL/AAAAAAAAAAADAPL/AAAAAAAAAAAAAPH/AAAAAAAAAAABAPH/AAAAAAAAAAACAPH/AAAAAAAAAAADAPH/AAAAAAAAAAAAAPD/AAAAAAAAAAABAPD/AAAAAAAAAAACAPD/AAAAAAAAAAADAPD/AAAAAAAAAAAAAO//AAAAAAAAAAABAO//AAAAAAAAAAACAO//AAAAAAAAAAADAO//AAAAAAAAAAAAAO7/AAAAAAAAAAAAAO3/AAAAAAAAAAAAAOz/AAAAAAAAAAAAAOv/AAAAAAAAAAABAOv/AAAAAAAAAAACAOv/AAAAAAAAAAADAOv/AAAAAAAAAAADAOz/AAAAAAAAAAADAO3/AAAAAAAAAAADAO7/AAAAAAAAAAACAO7/AAAAAAAAAAABAO7/AAAAAAAAAAABAO3/AAAAAAAAAAABAOz/AAAAAAAAAAACAOz/AAAAAAAAAAACAO3/AAAAAAAAAAA=")
+tile_set = ExtResource("2_kak6d")
+script = ExtResource("8_1xdsg")
+
+[node name="CrashSound" type="AudioStreamPlayer" parent="DownCrusher"]
+stream = ExtResource("8_6r357")
+volume_db = -20.0
+
+[node name="OneShotPlayerDetectionArea" parent="." instance=ExtResource("11_d432t")]
+position = Vector2(240, 0)
+script = ExtResource("12_jr3hu")
+Level = ExtResource("13_cvyi2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OneShotPlayerDetectionArea"]
+position = Vector2(16, 16.5)
+shape = SubResource("RectangleShape2D_48irw")
+
+[connection signal="body_entered" from="MovingKillerCloud/Area2D" to="MovingKillerCloud" method="OnPlayerEntered"]
+[connection signal="body_entered" from="FallingFloor1/DetectionArea" to="FallingFloor1" method="OnBodyEntered"]
+[connection signal="body_entered" from="FallingFloor2/DetectionArea" to="FallingFloor2" method="OnBodyEntered"]
+[connection signal="body_entered" from="WallDetectionArea" to="MovingWall" method="OnBodyEntered"]
+[connection signal="body_entered" from="UpCrusher/DetectionArea" to="UpCrusher" method="OnBodyEntered"]
+[connection signal="body_entered" from="UpCrusher/DetectionArea" to="DownCrusher" method="OnBodyEntered"]

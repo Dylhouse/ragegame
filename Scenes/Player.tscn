@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://cj4md5ymwmpf6"]
+[gd_scene load_steps=11 format=3 uid="uid://cj4md5ymwmpf6"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_722fc"]
 [ext_resource type="Texture2D" uid="uid://c0dmo75gv1f1b" path="res://Assets/Player_walk.png" id="2_2x60r"]
 [ext_resource type="Texture2D" uid="uid://cl20sbu1wm1k4" path="res://Assets/Player_idle.png" id="2_y3io4"]
+[ext_resource type="AudioStream" uid="uid://c6blujoab2ssw" path="res://Assets/Audio/Died.wav" id="4_pq2iv"]
+[ext_resource type="AudioStream" uid="uid://c3nqh4k8fc6c8" path="res://Assets/Audio/Music.mp3" id="5_iwvni"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2tnvh"]
 size = Vector2(6, 8)
@@ -42,6 +44,7 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 128
 script = ExtResource("1_722fc")
 
 [node name="PlayerCollider" type="CollisionShape2D" parent="."]
@@ -50,3 +53,28 @@ shape = SubResource("RectangleShape2D_2tnvh")
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_560nw")
 animation = &"idle"
+
+[node name="DeathParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 150
+lifetime = 5.0
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 50)
+initial_velocity_min = 75.0
+initial_velocity_max = 150.0
+color = Color(1, 0, 0, 1)
+
+[node name="RespawnTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DeathSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_pq2iv")
+volume_db = 10.4
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_iwvni")
+
+[connection signal="timeout" from="RespawnTimer" to="." method="OnRespawnTimerTimeout"]

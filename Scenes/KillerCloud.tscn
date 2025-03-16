@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://beogk4qbxevtj"]
+
+[ext_resource type="Script" path="res://Scripts/KillerCloud.cs" id="1_463xp"]
+[ext_resource type="Texture2D" uid="uid://dnr647gvcq0i0" path="res://Assets/cloud.png" id="2_jjbva"]
+[ext_resource type="Texture2D" uid="uid://m5p0bt3miqc6" path="res://Assets/Visual/cloud2.png" id="3_qclry"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8yk5l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_jjbva")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qclry")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="KillerCloudArea" type="Area2D"]
+position = Vector2(-144, 96)
+collision_layer = 0
+collision_mask = 128
+script = ExtResource("1_463xp")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-17, -130, -17, -138, -10, -145, -8, -145, -8, -156, 2, -165, 8, -165, 13, -161, 22, -170, 29, -170, 39, -162, 53, -169, 58, -169, 69, -166, 73, -164, 78, -159, 78, -153, 86, -145, 86, -141, 80, -135, 80, -129, 68, -116, 65, -115, 49, -111, 31, -107, 19, -107, 13, -112, 6, -112, -2, -116, -6, -118)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(33, -139.5)
+sprite_frames = SubResource("SpriteFrames_8yk5l")
+autoplay = "default"
+frame_progress = 0.640687
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

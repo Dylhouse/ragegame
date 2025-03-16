@@ -5,7 +5,12 @@ namespace Scripts;
 
 public partial class Player : CharacterBody2D
 {
-	const float TerminalVelocity = 100.0f;
+	/// <summary>
+	/// Max/min pitch shift of death sound.
+	/// </summary>
+	private const float PitchShiftRange = 0.2f;
+
+	const float TerminalVelocity = 110.0f;
 	const float TerminalAirVelocity = 150.0f;
 	const float Acceleration = 400.0f;
 	const float Deceleration = 250.0f;
@@ -13,6 +18,10 @@ public partial class Player : CharacterBody2D
 	const float WallSlideVelocity = 150.0f;
 	readonly float WallJumpXVelocity = 400.0f;
 	const float WallJumpyVelocity = -400.0f;
+
+	const float DeathDepth = 135.0f;
+
+	private bool dead = false;
 	
 	private bool wasOnFloor = false;
 	private bool ableToJump = false;
@@ -21,22 +30,57 @@ public partial class Player : CharacterBody2D
 
 	//private Timer coyoteTimer;
 	private AnimatedSprite2D animatedSprite;
+	private CpuParticles2D deathParticles;
+	private Timer respawnTimer;
+	private AudioStreamPlayer deathSoundPlayer;
+	private AudioStreamPlayer musicPlayer;
+
+	public void Kill()
+	{
+		dead = true;
+		deathSoundPlayer.Play();
+		GD.Print(respawnTimer.Paused);
+		respawnTimer.Start();
+		deathParticles.Emitting = true;
+		animatedSprite.Visible = false;
+	}
+
+	public void OnRespawnTimerTimeout()
+	{
+		GetTree().ReloadCurrentScene();
+	}
 
     public override void _Ready()
     {
 		animatedSprite = GetNode<AnimatedSprite2D>("PlayerSprite");
+		deathParticles = GetNode<CpuParticles2D>("DeathParticles");
+		respawnTimer = GetNode<Timer>("RespawnTimer");
+		deathSoundPlayer = GetNode<AudioStreamPlayer>("DeathSoundPlayer");
+		musicPlayer = GetNode<AudioStreamPlayer>("MusicPlayer");
+
+		musicPlayer.Play();
+
+		deathSoundPlayer.PitchScale = (GD.Randf() - 0.5f) * 2.0f * PitchShiftRange + 1.0f;
         //coyoteTimer = GetNode<Timer>("CoyoteTimer");
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("reset")) GetTree().ReloadCurrentScene();
     }
 
     public override void _PhysicsProcess(double delta)
 	{
+		if (dead) return;
+		if (Position.Y > DeathDepth)
+		{
+			Kill();
+		}
 		Vector2 velocity = Velocity;
 		bool onFloor = IsOnFloor();
-		bool onWall = IsOnWall();
 		float fdelta = (float) delta;
 
 		if (onFloor) ableToJump = true;
-		if (onWall) ableToWallJump = true;
 
 		// Add the gravity.
 		if (!onFloor)
@@ -53,12 +97,6 @@ public partial class Player : CharacterBody2D
 			{
 				velocity.Y = JumpVelocity;
 				ableToJump = false;
-			}
-
-			else if (ableToWallJump)
-			{
-				velocity = new Vector2(-WallJumpXVelocity, WallJumpyVelocity);
-				ableToWallJump = false;
 			}
 		}
 
@@ -101,12 +139,6 @@ public partial class Player : CharacterBody2D
 			}
 
 			else velocity.X -= XSlowing;
-		}
-
-		//Handle wallslide
-		if (onWall) 
-		{
-			if (velocity.Y > WallSlideVelocity) velocity.Y = WallSlideVelocity;
 		}
 
 		if (!onFloor)

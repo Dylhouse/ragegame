@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=4 uid="uid://b2qp4madjw2lo"]
+
+[ext_resource type="TileSet" uid="uid://x7v7vlbayiwp" path="res://Assets/GrassBrickTileset.tres" id="1_7il5p"]
+[ext_resource type="Script" path="res://Scripts/FallingFloor.cs" id="2_ujm7g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_caa03"]
+size = Vector2(31, 53)
+
+[node name="FallingFloor1" type="TileMapLayer"]
+tile_map_data = PackedByteArray("AAD4/wUAAAABAAAAAAD5/wUAAAABAAAAAAD6/wUAAAABAAAAAAD4/wYAAAAAAAAAAAD5/wYAAAAAAAAAAAD6/wYAAAAAAAAAAAA=")
+tile_set = ExtResource("1_7il5p")
+script = ExtResource("2_ujm7g")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(-105, 68.5)
+shape = SubResource("RectangleShape2D_caa03")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="OnBodyEntered"]
